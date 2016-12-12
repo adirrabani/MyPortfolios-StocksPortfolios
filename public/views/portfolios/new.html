@@ -1,0 +1,50 @@
+<!--
+<div ng-controller="PortfoliosCtrl">
+    
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <input class="form-control" ng-model="portfolio.name">
+                <button class="btn btn-primary" ng-click="addContact()">Add Contact</button>
+            </<div>
+        </<div> 
+    
+    
+</<div>
+-->
+    
+<div ng-controller="PortfoliosCtrl">
+   
+    <div class="modal-content">
+      <div class="modal-header">
+        <!--button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button-->
+        <h4 class="modal-title">Add New Portfolio</h4>
+      </div>
+      <div class="modal-body">
+        <p>Please enter portfolio name</p>
+
+		<form class="form-horizontal" role="form">
+		  
+		  <div class="form-group">
+		    <label for="name" class="col-sm-2 control-label">Portfolio Name</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control" id="portfolioname" placeholder="Portfolio Name" ng-model="portfolio.name">
+		    </div>
+		  </div>
+		  
+		  <div class="form-group">
+		    <label for="name" class="col-sm-2 control-label">Owner</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control" id="ownername" placeholder="Owner Name" ng-model="currentUser" ng-disabled="true">
+		    </div>
+		  </div>
+		  
+		</form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="newPortfolio()" class="btn btn-primary" data-dismiss="modal">OK</button>
+        <button type="button" ng-click="closeModal()" class="btn">Cancel</button>
+      </div>
+    </div>
+
+</div>    

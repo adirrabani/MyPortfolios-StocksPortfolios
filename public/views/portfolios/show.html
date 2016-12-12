@@ -1,0 +1,120 @@
+<div class="container" ng-init="getSpecificPortfolio()">
+    
+    
+    <div class="page-header">
+      <h1> {{ portfolio.name }} <small> {{ portfolio.owner }} </small></h1>  
+    </div>
+      <!--p>{{ error.data }}</p-->    
+      <p>{{ portfolioError }}</p> 
+    
+<div class="row">
+      <div class="col-md-6">
+        <p class="input-group">
+          <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="dt" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" />
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+      </div>
+</div>
+
+    
+    
+    <div ng-hide="portfolioError">      
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Symbol</th>         
+            <th>Date</th>
+            <th>Price</th>
+            <th>Shares</th>
+            <!--th>&nbsp;</th-->
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input class="form-control" ng-model="stock.symbol" ng-disabled="editFlag"></td>
+            <td><input class="form-control" ng-model="stock.buyDate"></td>
+            <td><input class="form-control" ng-model="stock.price"></td>
+            <td><input class="form-control" ng-model="stock.shares"></td>
+            <td><button class="btn btn-primary" ng-click="addStock()"  ng-disabled="editFlag">Add to portfolio</button></td>
+            <td><button class="btn btn-info" ng-click="updateStock()">Update</button>&nbsp;&nbsp;<button class="btn btn-info" ng-click="deselectStock()">Clear</button></td>
+          </tr>
+        </tbody>
+      </table>
+      
+      
+      <table class="table">
+        <thead>
+          <tr>
+            <th>&nbsp;</th>
+            <th>Symbol</th>         
+            <!--th>Buy Date</th-->
+            <th>Price</th>
+            <th>Shares</th>
+            <th>Update Time</th>
+            <th>Last Price</th>
+            <th>Today's Change</th>
+            <th>Today's Change %</th>
+            <th>Total Value</th>
+            <th>Total Gain/Loss</th>
+            <!--th>&nbsp;</th-->
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr ng-repeat-start="stock in portfolio.stocks">
+            <td>
+                <i title="Hide Dividends" class="glyphicon glyphicon-minus-sign" ng-if="stock.expanded" ng-click="stock.expanded = false"></i>
+                <i title="Show Dividends" class="glyphicon glyphicon-plus-sign" ng-hide="stock.totalDividends == 0" ng-if="!stock.expanded" ng-click="stock.expanded = true"></i>
+            </td>
+            <td  ng-init="getStockData(stock.symbol)">{{stock.symbol}}</td>
+            <!--td>{{stock.buyDate}}</td-->
+            <td>{{stock.price}}</td>
+            <td>{{stock.shares}}</td>
+            <td>{{stock.updateTime}}</td>
+            <td>{{stock.lastPrice}}</td>
+            <td ng-class="{'color-red': stock.change < 0 , 'color-green': stock.change > 0}">{{stock.change}}</td>
+            <td ng-class="{'color-red': stock.changePercent < 0 , 'color-green': stock.changePercent > 0}">{{stock.changePercent}}%</td>
+            <td ng-class="{'color-red': stock.gainLossPercent < 0 , 'color-green': stock.gainLossPercent > 0}">{{stock.value | number:2}} (<span ng-show="stock.gainLoss > 0">+</span>{{stock.gainLossPercent | number:2}}%)</td>
+            <td ng-class="{'color-red': stock.gainLoss < 0 , 'color-green': stock.gainLoss > 0}">{{stock.gainLoss | currency}}</td>
+            <td><button class="btn btn-danger" ng-click="removeStock(stock._id)">Remove</button></td>
+            <td><button class="btn btn-warning" ng-click="editStock(stock._id)">Edit</button></td>
+          </tr>
+          <tr ng-show="stock.expanded == true && stock.totalDividends > 0" ng-repeat-end="">
+            <td>&nbsp;</td>
+            <td><strong>Date</strong><hr>
+              <ul ng-repeat="dividend in stock.dividends">
+                {{dividend.dividendDate | date }}
+              </ul>
+              <hr>
+              <ul><strong>Total</strong></ul>
+            </td>
+            <td><strong>Dividend</strong><hr>
+              <ul ng-repeat="dividend in stock.dividends">
+                {{dividend.dividend | currency}}
+              </ul>
+              <hr>
+              <ul><u class="doubleUnderline">{{stock.totalDividends | currency}}</u></ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    <p>Total Value - {{portfolio.totalValue | currency}}</p>
+    <div class="panel panel-info totals">
+      <div class="panel-body">
+        Total Gain/Loss
+      </div>
+      <div class="panel-footer">
+        <p ng-class="{'color-red': portfolio.totalGainLoss < 0 , 'color-green': portfolio.totalGainLoss > 0}">
+           <span ng-show="portfolio.totalGainLoss > 0">+</span>{{portfolio.totalGainLoss | currency}} (<span ng-show="portfolio.totalGainLoss > 0">+</span>{{portfolio.totalGainLossPercent | number:2}}%)
+        </p>
+      </div>
+    </div>
+    
+    <a href="/#/portfolios/">Back to portfolios page</a>
+    
+      
+      
+    </div>
+</div>

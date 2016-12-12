@@ -1,0 +1,51 @@
+.page-header {
+    text-align: center;
+}
+
+ul {
+    list-style:none;
+    padding: 0px;
+    margin: 0px;
+}
+
+td,th {
+    text-align: center;
+    
+}
+
+td ul {
+    color: grey;
+    white-space: nowrap;
+
+}
+
+hr {
+    padding: 0px;
+    margin: 0px;
+    color: red;
+}
+
+.color-red {
+    color: red;
+}
+
+.color-green {
+    color: green;
+}
+
+.totals {
+    text-align: center;
+    margin: auto;
+    width: 25%;
+    
+}
+
+.doubleUnderline {
+    border-bottom: 1px double;
+}
+
+.jumbotron{
+    
+    background-color: #f8f8f8;
+    color: #777;
+}
