@@ -1,5 +1,5 @@
 
-portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http', '$location', '$httpParamSerializerJQLike', 'ngToast', function($scope, $rootScope, $http, $location, $httpParamSerializerJQLike, ngToast) {
+portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http', '$location', '$httpParamSerializerJQLike', 'ngToast', '$route', function($scope, $rootScope, $http, $location, $httpParamSerializerJQLike, ngToast, $route) {
     $scope.isLoggedIn;
     if($rootScope.currentUser){
         $location.url("/portfolios");
@@ -55,9 +55,11 @@ portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http',
     
     
     $rootScope.logout = function(user){
+        console.log("Logoutfor = " + user);
         var successCallback = function(response) {
             console.log(response);
             $rootScope.currentUser =  null;
+            $route.reload();
             $location.url("/portfolios");
         };
         

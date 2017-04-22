@@ -30,9 +30,9 @@ var portfolioSchema = new mongoose.Schema({
    name                 : String,
    owner                : String,
    totalBuy             : {type: Number, default: 0},
-   totalValue           : {type: Number, default: null},
-   totalGainLoss        : {type: Number, default: null},
-   totalGainLossPercent : {type: Number, default: null},
+   totalValue           : {type: Number, default: 0},
+   totalGainLoss        : {type: Number, default: 0},
+   totalGainLossPercent : {type: Number, default: 0},
    stocks               : [Stocks]
 });
 

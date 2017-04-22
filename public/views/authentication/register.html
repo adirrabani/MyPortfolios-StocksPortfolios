@@ -1,6 +1,42 @@
-<h1>Sign Up</h1>
 
+<div class="panel-heading">
+   <div class="panel-title text-center">
+   		<h1 class="title">Sign Up</h1>
+        <hr class="hrForms"></hr>  
+   	</div>
+</div> 
+
+<div class="main-login main-center">
+    <form class="form-horizontal">
+        
+        <div class="form-group">
+			<label for="name" class="cols-sm-2 control-label">Username</label>
+			<div class="cols-sm-10">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+					<input type="text" class="form-control" ng-model="user.username" placeholder="Enter Your Username">
+				</div>
+			</div>
+		
+			<label for="name" class="cols-sm-2 control-label">Password</label>
+			<div class="cols-sm-10">
+				<div class="input-group">
+					<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+					<input type="password" class="form-control" ng-model="user.password" placeholder="Enter Your Password">
+				</div>
+			</div>
+		</div>
+        
+        
+        <button class="btn btn-primary btn-lg btn-block login-button" ng-click="register(user)">Sign Up</button>
+    </form>
+</div>    
+
+
+
+
+<!--h1>Sign Up</h1>
 
 <input type="text" ng-model="user.username" placeholder="username">
 <input type="password" ng-model="user.password" placeholder="password">
-<button ng-click="register(user)">Sign Up</button>
+<button ng-click="register(user)">Sign Up</button-->

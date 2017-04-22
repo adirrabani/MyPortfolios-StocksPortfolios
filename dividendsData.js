@@ -74,7 +74,8 @@ function fetchDividendData (stock, callback) {
             });
         });
     } else {
-        console.error('Symbol is incorrect! - ' + stock.symbol);
+        console.error('Symbol is incorrect! - ' + stock);
+        console.error(stock);
         return null;
     }       
 

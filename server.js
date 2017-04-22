@@ -196,7 +196,6 @@ app.get('/api/portfolios', function(req, res){
                     if(error){
                         console.log("And error is = " + error);
                     }
-                    console.log("IN THE CALLBACK!!!");
                     Portfolio.find({'owner': req.user.username}, function(err, updatedPortfolios){
                             res.status(200).json(updatedPortfolios);
                         
@@ -229,6 +228,30 @@ app.post('/api/portfolios', isLoggedIn, function(req, res){
     });    
 });
 
+/*/ Edit portfolio
+app.post('/api/portfolios/:id', function(req, res){
+    var portfolioName = req.body.name;
+    console.log(req.body)
+    // Find the relevant portfolio
+    Portfolio.findOne({
+        '_id': req.params.id
+    }, function(err, foundPortfolio) {
+         if (err) {
+            console.log(err);
+            res.status(400).send("Portfolio cannot be found");
+        } 
+        else if (!foundPortfolio) {
+            console.log(err);
+            res.status(400).send("Portfolio cannot be found");
+        } else {
+            
+            foundPortfolio.name = portfolioName;
+            foundPortfolio.save();
+            res.json(foundPortfolio);
+        }
+    });
+}); */
+
 // Show specific portfolio
 app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
     // Find the relevant portfolio
@@ -245,6 +268,10 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
         }
         // Handle case when portfolio is empty
         else if(foundPortfolio.stocks.length === 0) { 
+            foundPortfolio.totalGainLoss        = 0;
+            foundPortfolio.totalGainLossPercent = 0;
+            foundPortfolio.totalValue = 0;
+            foundPortfolio.save();
             res.json(foundPortfolio);
         } 
         else {
@@ -282,14 +309,16 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
                     console.log("ERROR " + err);
                 } else {
                     for (var i = 0; i < foundPortfolio.stocks.length; i++) {
-                        // Catch when stock information couldn't be retrieved from Google API
+                        
                         try {
                             var currentStock = jsonBody.find(o => o.t === foundPortfolio.stocks[i].symbol);
-                        } catch (err) {
+                        }
+                        // Catch when stock information couldn't be retrieved from Google API
+                        catch (err) {
                             console.log("Stock information could not be retrieved from Google API " + err);
                         }
-                        console.log("STCOK IS " + foundPortfolio.stocks[i].symbol);
                         
+
                         // Prepare stock object
                         if (currentStock) {
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).lastPrice       = currentStock.l;
@@ -310,7 +339,12 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).gainLossPercent = null;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).value           = null;
                         }
+                        // Fetch dividends data
+                        dividendsData.fetchDividendData(foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id), function(sym, ret){
+                            console.log("Dividens fetch has ended - " + sym);
+                        });
                     }
+                    
                     // Calculate total Gain/Loss
                     foundPortfolio.totalGainLoss        = foundPortfolio.totalValue - foundPortfolio.totalBuy;
                     foundPortfolio.totalGainLossPercent = (foundPortfolio.totalValue - foundPortfolio.totalBuy) / foundPortfolio.totalBuy * 100;
@@ -327,9 +361,7 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
                         function(err,doc) {
                             if(err){
                                 console.log("Error while update portfolio value" + err);
-                            } else {
-                                console.log("DOC = " + doc);
-                            }
+                            } 
                         }
                     );
                     
@@ -343,11 +375,11 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
 });
 
 
-
+/*
 // Update specific portfolio (name only)
 app.put("/api/portfolios/:id", checkPortfolioOwnershipChange, function(req, res){
      console.log(req.body);
-     res.json(req.body);
+     //res.json(req.body);
    
    Portfolio.findByIdAndUpdate(req.params.id, { name: req.body.name }, function(err, updatedPortfolio){
       if(err){
@@ -358,6 +390,7 @@ app.put("/api/portfolios/:id", checkPortfolioOwnershipChange, function(req, res)
       }
    });
 });
+*/
 
 // Delete specific portfolio
 app.delete("/api/portfolios/:id", checkPortfolioOwnershipChange, function(req,res){
@@ -516,6 +549,7 @@ app.delete("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange
                     try {
                         //console.log("Before delete - " + foundPortfolio.stocks.id(stockId));
                         foundPortfolio.totalBuy -= (foundPortfolio.stocks.id(stockId).price * foundPortfolio.stocks.id(stockId).shares);
+                        //foundPortfolio.totalValue -= (foundPortfolio.stocks.id(stockId).lastPrice * foundPortfolio.stocks.id(stockId).shares);
                         foundPortfolio.stocks.id(stockId).remove();
                     } catch (err) {
                         // if stock exists but could not be removed - return 400
@@ -523,7 +557,7 @@ app.delete("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange
                         res.status(400).send("Stock could not be removed");
                     }
                     foundPortfolio.save();
-                    //console.log(foundPortfolio);
+                    //console.log("foundPortfolio  " + foundPortfolio);
                     res.json(foundPortfolio);
                 } else {
                     console.log("Stock could not be removed - " + err);
@@ -592,8 +626,7 @@ function getTotalValue(portfolioId, callback){
                         } catch (err) {
                             console.log("Stock information could not be retrieved from Google API " + err);
                         }
-                        console.log("DURING!!!");
-                        
+                    
                         // Prepare stock object
                         if (currentStock) {
                             foundPortfolio.totalValue += currentStock.l * foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).shares;
@@ -601,7 +634,7 @@ function getTotalValue(portfolioId, callback){
                             //foundPortfolio.save();    
                         }
                     }
-                    console.log("FINISHED!!!");                
+                    
                     Portfolio.findOneAndUpdate(
                         {"_id": foundPortfolio._id },
                         { 

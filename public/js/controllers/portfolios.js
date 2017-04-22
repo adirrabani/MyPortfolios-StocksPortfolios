@@ -72,13 +72,51 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
                     timeout: 5000
                 });
             }
-            
         };
          var config = {
              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         };
         $http.post('/api/portfolios', $httpParamSerializerJQLike($scope.portfolio), config).then(successCallback,errorCallback);
     };
+    /*
+    // Edit Portfolio (name only)
+    $scope.editPortfolio = function(portfolioId){
+        console.log("portid = " + $scope.editPortfolioId);
+        var successCallback = function(response) {
+            //var res = response.data;
+            console.dir(response.data);
+            $scope.closeModal();
+            $location.url("/portfolios");
+        };
+        var errorCallback = function(err) {
+            if(err.status == 401){
+                $scope.closeModal();
+                ngToast.create({
+                    className: 'danger',
+                    content: "Please login first",
+                    horizontalPosition: 'center',
+                    dismissButton: 'true',
+                    timeout: 5000
+                });
+                $location.url("/login");
+            } else {
+                $scope.closeModal();
+                ngToast.create({
+                    className: 'danger',
+                    content: "There was a problem with the request " + err.data,
+                    horizontalPosition: 'center',
+                    dismissButton: 'true',
+                    timeout: 5000
+                });
+            }
+            
+        };
+         var config = {
+             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        };
+        $http.put('/api/portfolios/' + portfolioId, $httpParamSerializerJQLike($scope.portfolio), config).then(successCallback,errorCallback);
+    };*/
+    
     
     // Get specific portfolio
      $scope.getSpecificPortfolio = function(){
@@ -251,6 +289,16 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
                 controller: "PortfoliosCtrl"
         });
     };
+    /*
+    $scope.openModalEdit = function(portfolioId){
+        $scope.editPortfolioId = portfolioId;
+        console.log("portid in = " + $scope.editPortfolioId);
+        $scope.openmodal = $uibModal.open({
+                scope: $scope,
+                templateUrl: "views/portfolios/edit.html",
+                controller: "PortfoliosCtrl"
+        });
+    };*/
     
      $scope.closeModal = function(){
          //$scope.getAllPortfolios();
