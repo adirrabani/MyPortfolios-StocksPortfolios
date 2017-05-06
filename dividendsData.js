@@ -51,7 +51,7 @@ function fetchDividendData (stock, callback) {
                 //console.log(stock.shares);
                 
                 totalDiv = totalDiv * stock.shares;
-                console.log(totalDiv);
+                //console.log(totalDiv);
                 
                 // Updates DB with dividends data for a specific stock
                 Portfolio.findOneAndUpdate(

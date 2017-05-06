@@ -13,13 +13,13 @@ var bodyParser = require("body-parser"),
 // Registration route (Using passport local strategy)
 router.post("/register", function(req, res){
     var newUser = new User({username: req.body.username});
-    console.log(req.body);
+    //console.log(req.body);
     User.register(newUser, req.body.password, function(err, user){
         if(err){
             console.log("Error in registration - " + err.message);
             res.status(400).json(err.message);
         } else {
-            console.log(user);
+            //console.log(user);
             passport.authenticate("local")(req, res, function(){
                 res.status(200).json(user);
             });    
@@ -30,7 +30,7 @@ router.post("/register", function(req, res){
 
 // Login route
 router.post("/login", passport.authenticate("local"), function(req, res){
-    console.log(req.user);
+    //console.log(req.user);
     res.json(req.user);
 });
 
@@ -42,7 +42,7 @@ router.post("/logout", function(req, res){
 
 // Check if user logged in route
 router.get('/isLoggedIn', function(req, res){
-    console.log(req.user);
+    //console.log(req.user);
     res.send(req.isAuthenticated() ? req.user : '0');
 });
 
@@ -153,7 +153,7 @@ router.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res
             function onFinished(err) {
                 foundPortfolio.totalValue = 0;
                 if (err) {
-                    console.log("ERROR " + err);
+                    console.log("Error while trying retrieve portfolio information : " + err);
                 } else {
                     for (var i = 0; i < foundPortfolio.stocks.length; i++) {
                         
@@ -187,7 +187,7 @@ router.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res
                         }
                         // Fetch dividends data
                         dividendsData.fetchDividendData(foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id), function(sym, ret){
-                            console.log("Dividens fetch has ended - " + sym);
+                            //console.log("Dividens fetch has ended - " + sym);
                         });
                     }
                     
@@ -245,7 +245,7 @@ router.get("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipShow, 
                 res.json(err);
             } else {
                 if(foundPortfolio.stocks.id(stockId)){
-                    console.log(foundPortfolio.stocks.id(stockId));
+                    //console.log(foundPortfolio.stocks.id(stockId));
                     res.json(foundPortfolio.stocks.id(stockId));    
                 } else {
                     console.log("Stock was not found");
@@ -264,7 +264,7 @@ router.post('/api/portfolios/:id/stocks', checkPortfolioOwnershipChange, functio
         request('https://www.google.com/finance/info?q=' + req.body.symbol, function (err, response, body) {
             if (!err && response.statusCode == 200) {
                 var id = req.params.id;
-                console.log(req.body);
+                //console.log(req.body);
                 var newStock = {symbol: req.body.symbol.toUpperCase(), buyDate: req.body.buyDate, price: req.body.price, shares: req.body.shares, lastPrice:null,change:null, changePercent:null, updateTime:null};
              
                 Portfolio.findById(id, function(err,foundPortfolio){
@@ -333,7 +333,7 @@ router.put("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange
                         } else {
                             // Add dividend information
                             dividendsData.fetchDividendData(foundPortfolio.stocks.id(stockId), function(sym, ret){
-                                console.log("Dividens fetch has ended - " + sym);
+                                //console.log("Dividens fetch has ended - " + sym);
                                  Portfolio.findOne(
                                     {'_id': portfolioId}, 'stocks', function(err, foundPortfolio) {
                                         if (err) { 
@@ -401,7 +401,6 @@ router.get("/api/portfolios/:id/value", checkPortfolioOwnershipChange, function(
             console.log("Value data could not be retrieved");
             res.status(400).send("Value data could not be retrieved");
         } else {
-            console.log("Value added");
             res.status(200).send("Portfolio value was updated");
         }
     });
@@ -414,7 +413,7 @@ router.get("/api/portfolios/:id/value", checkPortfolioOwnershipChange, function(
 
 // Get stocks data from Google API
 function getStockData(url, callback){
-    console.log(url);
+    //console.log(url);
     request(url, function(err, response, body) {
         if (!err && response.statusCode == 200) {
             var jsonBody = body.replace("// ", "");
@@ -428,12 +427,12 @@ function getStockData(url, callback){
 }
 
 function getTotalValue(portfolioId, callback){
-    console.log("Start for ID = " + portfolioId);
+    //console.log("Start for ID = " + portfolioId);
      Portfolio.findOne({
         '_id': portfolioId
     }, function(err, foundPortfolio) {
         if(err){
-            console.log("ERROR IS = " + err);
+            console.log("Eror when trying to get total value = " + err);
         } else {
             var symbolsQuery = "";
             //console.log("consopla  :   " + foundPortfolio);
@@ -476,7 +475,6 @@ function getTotalValue(portfolioId, callback){
                                 console.log("Error while update portfolio value" + err);
                                 callback(err);
                             } else {
-                                console.log("AFTER!!!");
                                 callback(null);
                             }
                         }
@@ -484,7 +482,6 @@ function getTotalValue(portfolioId, callback){
                     
                 });
             } else {
-                console.log("Empty stocks!!!");
                 callback(null);
             }    
         }
