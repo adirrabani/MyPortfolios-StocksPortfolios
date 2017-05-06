@@ -21,8 +21,7 @@ function fetchDividendData (stock, callback) {
         
         var dateRange = ("&a="+a+"&b="+b+"&c="+c+"&d="+d+"&e="+e+"&f="+f);
         
-        // URL of Yahoo API (gives us dividends data)
-        //var url = "http://real-chart.finance.yahoo.com/table.csv?s=" + symbol + "&a=00&b=1&c=1900&d=11&e=31&f=2020&g=v&ignore=.csv";
+        // Yahoo API URL (for dividends data), CSV format
         var url = "http://real-chart.finance.yahoo.com/table.csv?s=" + stock.symbol + dateRange +"&g=v&ignore=.csv";
         
         var request = http.get(url, function (res) {

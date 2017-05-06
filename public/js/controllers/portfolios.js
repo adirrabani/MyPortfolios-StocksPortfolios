@@ -13,13 +13,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     
     // Get all portfolios
     $scope.getAllPortfolios = function(){
-        console.log("GetAll was initiated");
-        /*ngToast.create({
-                className: 'danger',
-                content: 'Hello ',
-                dismissButton: 'true',
-                timeout: 10000
-        });*/
+        //console.log("GetAll was initiated");
         var successCallback = function(response) {
             //console.dir(response.data);
             console.log("GetAll Done");
@@ -78,45 +72,6 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
         };
         $http.post('/api/portfolios', $httpParamSerializerJQLike($scope.portfolio), config).then(successCallback,errorCallback);
     };
-    /*
-    // Edit Portfolio (name only)
-    $scope.editPortfolio = function(portfolioId){
-        console.log("portid = " + $scope.editPortfolioId);
-        var successCallback = function(response) {
-            //var res = response.data;
-            console.dir(response.data);
-            $scope.closeModal();
-            $location.url("/portfolios");
-        };
-        var errorCallback = function(err) {
-            if(err.status == 401){
-                $scope.closeModal();
-                ngToast.create({
-                    className: 'danger',
-                    content: "Please login first",
-                    horizontalPosition: 'center',
-                    dismissButton: 'true',
-                    timeout: 5000
-                });
-                $location.url("/login");
-            } else {
-                $scope.closeModal();
-                ngToast.create({
-                    className: 'danger',
-                    content: "There was a problem with the request " + err.data,
-                    horizontalPosition: 'center',
-                    dismissButton: 'true',
-                    timeout: 5000
-                });
-            }
-            
-        };
-         var config = {
-             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        };
-        $http.put('/api/portfolios/' + portfolioId, $httpParamSerializerJQLike($scope.portfolio), config).then(successCallback,errorCallback);
-    };*/
-    
     
     // Get specific portfolio
      $scope.getSpecificPortfolio = function(){
@@ -133,7 +88,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
             console.log("Portfolio cannot be found");
         };
          
-         //console.log('Get specific req to - /api/portfolios/' + $routeParams.portfolioId )
+        //console.log('Get specific req to - /api/portfolios/' + $routeParams.portfolioId )
         $http.get('/api/portfolios/' + $routeParams.portfolioId).then(successCallback,errorCallback);
     };
     
@@ -148,8 +103,6 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     // Remove specific portfolio
     $scope.removePortfolio = function(portfolioId){
         var successCallback = function(response) {
-            //console.dir(response.data);
-            //$scope.stock = "";
             console.log($routeParams.portfolioId);
             $scope.getAllPortfolios();
             ngToast.create({
@@ -176,7 +129,6 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
         };
         
         $http.delete('/api/portfolios/' + portfolioId, $httpParamSerializerJQLike($scope.stock), config).then(successCallback,errorCallback);
-        //$scope.closeModal();
     };
     
     // Get stock from specific portfolio for edit
@@ -289,16 +241,6 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
                 controller: "PortfoliosCtrl"
         });
     };
-    /*
-    $scope.openModalEdit = function(portfolioId){
-        $scope.editPortfolioId = portfolioId;
-        console.log("portid in = " + $scope.editPortfolioId);
-        $scope.openmodal = $uibModal.open({
-                scope: $scope,
-                templateUrl: "views/portfolios/edit.html",
-                controller: "PortfoliosCtrl"
-        });
-    };*/
     
      $scope.closeModal = function(){
          //$scope.getAllPortfolios();

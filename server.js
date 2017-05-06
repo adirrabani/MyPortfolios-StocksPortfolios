@@ -15,17 +15,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', __dirname + '/public/views');
 app.use(express.static(__dirname + '/public'));
 mongoose.createConnection("mongodb://adirke:adirke@ds159237.mlab.com:59237/portfoliosapp");
-/*
-app.use(session({ secret: "Secret!!!"}));
-app.use(cookieParser());
-app.use(passport.initialize());
-app.use(passport.session());
-*/
 
 // Passport Configuration
 app.use(cookieParser());
 app.use(require("express-session")({
-    secret:"BlaShelBLABLASheNo",
+    secret:"BlaShelBLABLASheqNo",
     resave: false,
     saveUninitialized: false
 }));
@@ -36,7 +30,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-//handle sign up logic
+// Registration route (Using passport local strategy)
 app.post("/register", function(req, res){
     var newUser = new User({username: req.body.username});
     console.log(req.body);
@@ -54,6 +48,7 @@ app.post("/register", function(req, res){
     });
 });
 
+// Login route
 app.post("/login", passport.authenticate("local"), function(req, res){
     console.log(req.user);
     res.json(req.user);
@@ -65,136 +60,38 @@ app.post("/logout", function(req, res){
     res.sendStatus(200);
 });
 
-// Check if user is logged in
+// Check if user logged in route
 app.get('/isLoggedIn', function(req, res){
     console.log(req.user);
     res.send(req.isAuthenticated() ? req.user : '0');
 });
 
-// Middlewere to check if user is logged in
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } else {
-        res.status(401).send("User is not logged in");
-    }
-}
 
-/*
-passport.use(new LocalStrategy(function(username, password, done){
-    User.findOne({username: username, password:password}, function(err, user){
-        if(err){
-            console.log("DB error while login");
-        }
-        else if(user){
-            return done(null, user);
-        } 
-        else {
-            // If user was not found - 
-            return done(null, false, {message: "unable to login"});     
-        }
-    });
-}));
-passport.serializeUser(function(user,done){
-    done(null,user);
-});
-passport.deserializeUser(function(user,done){
-    done(null,user);
-});
-*/
-
-/*
-var bla = new User({username: "bob", password:"bob"});
-bla.save();
-
-passport.use(new LocalStrategy(User.authenticate()));
-
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-*/
-
-/*
-// Authentivation routes
-
-// Registration
-app.post('/register', function(req, res, next){
-    
-    console.log(req.body);
-    
-    // Check if user already exists
-    User.findOne({username: req.body.username}, function(err,user){
-        if(err){
-            console.log("Registration problem - DB error" + err);
-            res.status(500).json("Registration problem - DB rror" + err);
-        } else if(user) {
-            console.log("User already exists");
-            res.status(409).json("User already exists");
-        } else {
-            var newUser = new User(req.body);
-            newUser.save(function(err, user){
-                if(err){
-                    res.status(500).json("Registration problem - DB save error" + err);
-                } else {
-                    req.login(user, function(err){
-                       if(err)  { return next(err); }
-                       res.json(user);
-                    });
-                }
-            });
-        }
-    });
-    
-});
-
-// Login
-app.post('/login', passport.authenticate('local'), function(req, res){
-    console.log(req.user);
-    res.json(req.user);
-});
-
-// Logout
-app.post('/logout', function(req, res){
-    //req.logOut();
-     
-    req.logout();
-    //console.log(req.user);
-    res.sendStatus(200);
-});
-
-// Check if user is logged in
-app.get('/isloggedin', function(req, res){
-    console.log(req.user);
-    res.send(req.isAuthenticated() ? req.user : '0');
-});
-*/
-
-
-// Show all portfolios
+// Show all portfolios for the relevant user (main page)
 app.get('/api/portfolios', function(req, res){
-    // Collect total value data for all portfolios
+    // Checks if user is logged in and collect total value data for all portfolios
     if(req.isAuthenticated()){
         Portfolio.find({'owner': req.user.username}, function(err, allPortfolios){
             if(err){
                 console.log("Cannot find portfolios - " + err);
                 res.status(400).send("Cannot find portfolios - " + err);
             } else {
-                //console.log("Current = " + allPortfolios);
+                // Calculate total value for each portfolio using getTotalValue, after that execute onFinished function
                 async.eachSeries(allPortfolios, function(portfolio, next) {
                     getTotalValue(portfolio._id, function(err){
                         if(err){
-                            console.log("Error while retrieving portfolio value");
                             next(err);
                         } else {
                             next();
                         }
-                        console.log("DONE for id " + portfolio._id);
+                        //console.log("DONE for id " + portfolio._id);
                     });
     
                 }, onFinished);
                 
                 function onFinished(error){
                     if(error){
-                        console.log("And error is = " + error);
+                        console.log("Portfolio value calculation error : " + error);
                     }
                     Portfolio.find({'owner': req.user.username}, function(err, updatedPortfolios){
                             res.status(200).json(updatedPortfolios);
@@ -216,50 +113,24 @@ app.get('/api/portfolios', function(req, res){
 // Add new portfolio
 app.post('/api/portfolios', isLoggedIn, function(req, res){
     var newPortfolio = {name: req.body.name, owner: req.user.username};
-    //portfolios.push(newPortfolio);
-        
+    
     Portfolio.create(newPortfolio, function(err, newPortfolio){
         if(err){
-            console.log("error from DB POST");
+            console.log("Error while creating new portfolio : " + err);
         } else {
-            console.log(newPortfolio);
             res.json(newPortfolio);
         }
     });    
 });
 
-/*/ Edit portfolio
-app.post('/api/portfolios/:id', function(req, res){
-    var portfolioName = req.body.name;
-    console.log(req.body)
-    // Find the relevant portfolio
-    Portfolio.findOne({
-        '_id': req.params.id
-    }, function(err, foundPortfolio) {
-         if (err) {
-            console.log(err);
-            res.status(400).send("Portfolio cannot be found");
-        } 
-        else if (!foundPortfolio) {
-            console.log(err);
-            res.status(400).send("Portfolio cannot be found");
-        } else {
-            
-            foundPortfolio.name = portfolioName;
-            foundPortfolio.save();
-            res.json(foundPortfolio);
-        }
-    });
-}); */
-
 // Show specific portfolio
 app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
-    // Find the relevant portfolio
+    // Find the relevant portfolio using 'id' parameter
     Portfolio.findOne({
         '_id': req.params.id
     }, function(err, foundPortfolio) {
         if (err) {
-            console.log(err);
+            console.log("Portfolio cannot be found : " + err);
             res.status(400).send("Portfolio cannot be found");
         } 
         else if (!foundPortfolio) {
@@ -277,12 +148,12 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
         else {
             var symbolsQuery = "";
             var jsonBody = "";
-            // Build symbols list for the API
+            // Build symbols list for the google finance API, for example - 'https://www.google.com/finance/info?q=tsem,xlf'
             for (var i = 0; i < foundPortfolio.stocks.length; i++) {
                 symbolsQuery += foundPortfolio.stocks[i].symbol + ",";
             }
             var queryUrl = [('https://www.google.com/finance/info?q=' + symbolsQuery)];
-            console.log(queryUrl);
+            //console.log(queryUrl);
 
             // Running synchronize query against Google finance API, jsonBody is array that holds all the data of the stocks in the portfolio
             async.eachSeries(queryUrl, function(url, next) {
@@ -298,13 +169,9 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
                 })
             }, onFinished)
 
-            // After query execution send stocks data for the specified portfolio.   
+            // After query execution sends stocks data for the specified portfolio.   
             function onFinished(err) {
-                // Total value calculation
-                //var totalValue = 0;
                 foundPortfolio.totalValue = 0;
-                //foundPortfolio.totalBuy = 0;
-                
                 if (err) {
                     console.log("ERROR " + err);
                 } else {
@@ -315,7 +182,7 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
                         }
                         // Catch when stock information couldn't be retrieved from Google API
                         catch (err) {
-                            console.log("Stock information could not be retrieved from Google API " + err);
+                            console.log("Stock information could not be retrieved from Google API : " + err);
                         }
                         
 
@@ -329,7 +196,6 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).gainLossPercent = (currentStock.l - foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).price) / foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).price * 100;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).value           = currentStock.l * foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).shares;
                             foundPortfolio.totalValue += (currentStock.l * foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).shares);
-                            //foundPortfolio.save();    
                         } else { // if stock data was not retrieved - enter null to the vars
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).lastPrice       = null;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).change          = null;
@@ -375,24 +241,7 @@ app.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res) {
 });
 
 
-/*
-// Update specific portfolio (name only)
-app.put("/api/portfolios/:id", checkPortfolioOwnershipChange, function(req, res){
-     console.log(req.body);
-     //res.json(req.body);
-   
-   Portfolio.findByIdAndUpdate(req.params.id, { name: req.body.name }, function(err, updatedPortfolio){
-      if(err){
-          console.log(err);
-          res.json(Portfolio);
-      } else {
-          res.json(Portfolio);
-      }
-   });
-});
-*/
-
-// Delete specific portfolio
+// Verify user ownership and delete specific portfolio
 app.delete("/api/portfolios/:id", checkPortfolioOwnershipChange, function(req,res){
    Portfolio.findByIdAndRemove(req.params.id, function(err){
        if(err){
@@ -404,7 +253,7 @@ app.delete("/api/portfolios/:id", checkPortfolioOwnershipChange, function(req,re
    });
 });
 
-// Show specific stock
+// Verify user ownership and show specific stock
 app.get("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipShow, function(req,res){
     var portfolioId = req.params.id;
     var stockId = req.params.stock_id;
@@ -443,7 +292,7 @@ app.post('/api/portfolios/:id/stocks', checkPortfolioOwnershipChange, function(r
                     var existStock = foundPortfolio.stocks.find(o => o.symbol === req.body.symbol.toUpperCase());
                     
                     if(err){
-                        console.log("Portfolio cannot be found" + err);
+                        console.log("Portfolio cannot be found : " + err);
                         res.status(400).send("Portfolio cannot be found" + err);
                     } 
                     //  Handle case when stock is already exists
@@ -460,9 +309,8 @@ app.post('/api/portfolios/:id/stocks', checkPortfolioOwnershipChange, function(r
                                 res.status(400).send(""+err);
                             } else {
                                 var currentStock = savedPortfolio.stocks[savedPortfolio.stocks.length-1];
-                                //console.log("STOCK = " + savedPortfolio.stocks[savedPortfolio.stocks.length-1]);
                                 dividendsData.fetchDividendData(currentStock, function(sym, ret){
-                                    console.log("Dividens fetch has ended - " + sym);
+                                    //console.log("Dividens fetch has ended - " + sym);
                                 });
                                 res.json(foundPortfolio);    
                             }
@@ -478,8 +326,6 @@ app.post('/api/portfolios/:id/stocks', checkPortfolioOwnershipChange, function(r
     } else {
         res.status(400).send("All the fields are required");
     }
-    
-
 });
 
 // Update specific stock
@@ -531,7 +377,7 @@ app.put("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange, f
     
 });
 
-// Delete specific stock
+// Check portfolio ownershop and delete specific stock
 app.delete("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange, function(req,res){
     var portfolioId = req.params.id;
     var stockId = req.params.stock_id;
@@ -547,20 +393,18 @@ app.delete("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange
                 // Check if stock is exists in portfolio, if not return 400.
                 if(foundPortfolio.stocks.id(stockId)){
                     try {
-                        //console.log("Before delete - " + foundPortfolio.stocks.id(stockId));
                         foundPortfolio.totalBuy -= (foundPortfolio.stocks.id(stockId).price * foundPortfolio.stocks.id(stockId).shares);
-                        //foundPortfolio.totalValue -= (foundPortfolio.stocks.id(stockId).lastPrice * foundPortfolio.stocks.id(stockId).shares);
                         foundPortfolio.stocks.id(stockId).remove();
                     } catch (err) {
                         // if stock exists but could not be removed - return 400
-                        console.log("Stock could not be removed - " + err);
+                        console.log("Stock could not be removed : " + err);
                         res.status(400).send("Stock could not be removed");
                     }
                     foundPortfolio.save();
                     //console.log("foundPortfolio  " + foundPortfolio);
                     res.json(foundPortfolio);
                 } else {
-                    console.log("Stock could not be removed - " + err);
+                    console.log("Stock could not be removed : " + err);
                     res.status(400).send("Stock could not be found");
                 }
             }
@@ -579,11 +423,15 @@ app.get("/api/portfolios/:id/value", checkPortfolioOwnershipChange, function(req
             res.status(400).send("Value data could not be retrieved");
         } else {
             console.log("Value added");
-            res.status(200).send("Portfolio valuewas updated");
+            res.status(200).send("Portfolio value was updated");
         }
     })
 });
 
+// Redirecting all other requests to angular route component
+ app.get('*', function(req, res) {
+    res.sendFile(__dirname  + '/public/index.html'); // load index.html file
+});
 
 // Get stocks data from Google API
 function getStockData(url, callback){
@@ -731,10 +579,14 @@ function checkPortfolioOwnershipChange(req, res, next){
 }
 
 
-// Redirecting all other requests to angular route component
- app.get('*', function(req, res) {
-    res.sendFile(__dirname  + '/public/index.html'); // load index.html file
-});
+// Function that checks if user is logged in
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    } else {
+        res.status(401).send("User is not logged in");
+    }
+}
 
 app.listen(process.env.PORT, process.env.IP, function(){
    console.log("MyPortfolio Web Server Has Started");
