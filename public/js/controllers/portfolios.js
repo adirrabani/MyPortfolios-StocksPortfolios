@@ -16,7 +16,6 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
         //console.log("GetAll was initiated");
         var successCallback = function(response) {
             //console.dir(response.data);
-            console.log("GetAll Done");
             $scope.isLoggedIn();
             $scope.portfolios = response.data;
             $scope.portfolio = "";
@@ -41,7 +40,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     $scope.newPortfolio = function(){
         var successCallback = function(response) {
             var res = response.data;
-            console.dir(response.data);
+            //console.dir(response.data);
             $scope.closeModal();
             $location.url("/portfolios/" + res._id);
         };
@@ -81,7 +80,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
         
         var successCallback = function(response) {
             $scope.portfolio = response.data;
-            console.dir($scope.portfolio);
+            //console.dir($scope.portfolio);
         };
         var errorCallback = function() {
             $scope.portfolioError = "Portfolio cannot be found";
@@ -103,7 +102,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     // Remove specific portfolio
     $scope.removePortfolio = function(portfolioId){
         var successCallback = function(response) {
-            console.log($routeParams.portfolioId);
+            // console.log($routeParams.portfolioId);
             $scope.getAllPortfolios();
             ngToast.create({
                 className: 'info',
@@ -135,7 +134,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     $scope.editStock = function(stockId){
         $scope.editFlag = true;
         var successCallback = function(response) {
-            console.dir(response.data);
+            //console.dir(response.data);
             $scope.stock = response.data;
         };
         var errorCallback = function(err) {
@@ -181,7 +180,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     $scope.updateStock = function(stockId){
         //console.log("Will put to here - /api/portfolios/" + $routeParams.portfolioId + '/stocks/' + $scope.stock._id);
         var successCallback = function(response) {
-            console.dir(response.data);
+            // console.dir(response.data);
             $scope.stock = "";
             $scope.getSpecificPortfolio();
             $scope.editFlag = false;

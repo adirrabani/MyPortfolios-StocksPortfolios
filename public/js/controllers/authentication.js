@@ -57,9 +57,9 @@ portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http',
     
     // Handle logouts using MyPortfolios API
     $rootScope.logout = function(user){
-        console.log("Logoutfor = " + user);
+        //console.log("Logoutfor = " + user);
         var successCallback = function(response) {
-            console.log(response);
+            //console.log(response);
             $rootScope.currentUser =  null;
             $route.reload();
             $location.url("/portfolios");
@@ -72,13 +72,13 @@ portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http',
 
         $scope.error = null;
         $http.post('/logout').then(successCallback,errorCallback);
-        console.log(user);
+        //console.log(user);
     };
     
     // Handle registrations using MyPortfolios API
     $scope.register = function(user){
         var successCallback = function(response) {
-            console.log(response);
+            //console.log(response);
             ngToast.create({
                 className: 'info',
                 content: 'Hello ' + response.data.username,
@@ -106,7 +106,7 @@ portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http',
         
         $scope.error = null;
         $http.post('/register', $httpParamSerializerJQLike($scope.user), config).then(successCallback,errorCallback);
-        console.log(user);
+        // console.log(user);
     };
     
 }]);
