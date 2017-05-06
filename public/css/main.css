@@ -2,6 +2,10 @@
     text-align: center;
 }
 
+navbar{
+    color: red;
+}
+
 ul {
     list-style:none;
     padding: 0px;
@@ -45,9 +49,10 @@ hr {
 }
 
 .jumbotron{
-    
-    background-color: #f8f8f8;
-    color: #777;
+    background-image: url("https://ak2.picdn.net/shutterstock/videos/7508008/thumb/1.jpg");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    color: grey;
 }
 
 /* Styilng Login/Sign Up forms */
@@ -86,3 +91,6 @@ hr {
 	margin: 0 auto;
     
 }
+
+
+/*https://ak2.picdn.net/shutterstock/videos/7508008/thumb/1.jpg*/
