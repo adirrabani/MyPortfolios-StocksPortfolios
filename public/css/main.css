@@ -1,5 +1,7 @@
-.page-header {
-    text-align: center;
+body {
+  font-family: "Tahoma";
+   background-image: url("../img/site_background.jpg");
+   background-size: cover;
 }
 
 navbar{
@@ -20,13 +22,16 @@ td,th {
 td ul {
     color: grey;
     white-space: nowrap;
-
 }
 
 hr {
     padding: 0px;
     margin: 0px;
-    color: red;
+    border-width: initial;
+}
+
+.page-header {
+    text-align: center;
 }
 
 .color-red {
@@ -49,10 +54,10 @@ hr {
 }
 
 .jumbotron{
-    background-image: url("../img/jumbotron_bj.jpg");
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+    background-color: transparent;
     color: grey;
+    margin: 0;
+    padding: 10px;
 }
 
 /* Styilng Login/Sign Up forms */
@@ -91,3 +96,16 @@ hr {
 	margin: 0 auto;
     
 }
+
+#portfolios-view {
+  border-color: darkgray;  
+  width: 70%;
+  text-align:center; 
+  margin: 0 auto;
+  border-width: thin
+}
+
+#portfolios-name {
+    display: inline-block;
+}
+

@@ -1,34 +1,29 @@
 <div class="container" ng-init="getAllPortfolios()">
-    <header class="jumbotron">
-        <div class="container">        
-            <h1>My Portfolios</h1>
-                <!--<a class="btn btn-primary btn-large" href="/#/portfolios/new">Add New Portfolio</a>-->
-            <p>Welcome to My Portfolios site!</p>                        
-            <button type="button" class="btn btn-primary" ng-click="openModal()">Add New Portfolio</button>
-        </div>
-        
-    </header>
     
-    <div class="row">
-        <div class="row text-center">
-            <div ng-repeat="port in portfolios" class="col-md-3 col-sm-6">
-                <div class="thumbnail">
-                    <!--img style="height: 150px; width:100%;" src="<%=campground.image%>"-->
-                    <div class="caption">
-                        <h4>{{port.name}}</h4>    
-                    </div>
-                    <p>
-                        Total Value : {{port.totalValue | currency}}
-                    </p>
-                    <p ng-class="{'color-red': port.totalGainLoss < 0 , 'color-green': port.totalGainLoss > 0}">
-                        Gain/Loss : <span ng-show="port.totalGainLoss > 0">+</span>{{port.totalGainLoss | currency}} (<span ng-show="port.totalGainLoss > 0">+</span>{{port.totalGainLossPercent | number:2}}%)
-                    </p>
-                    <p>
-                        <a href="/#/portfolios/{{port._id}}" class="btn btn-primary">Show Portfolio</a>
-                        <button class="btn btn-danger" ng-click="removePortfolio(port._id)">Remove</button>
-                    </p>
-                </div>
-            </div>
+    <section class="jumbotron text-center">
+      <div class="container">
+        <h1 class="jumbotron-heading">My Portfolios</h1>
+        <p class="lead text-muted">Welcome to My Portfolios site!</p>
+        <p>
+          <button type="button" class="btn btn-primary" ng-click="openModal()">Add New Portfolio</button>
+          <a href="#" class="btn btn-secondary">Secondary action</a>
+        </p>
+      </div>
+    </section>
+    <hr>
+    <div class="row text-center">
+        <div ng-repeat="port in portfolios" class="col-md-4 col-sm-6">
+          <h3>{{port.name}} <small> {{ port.owner }} </small> </h3>
+          <p>Total Value : {{port.totalValue | currency}}</p>
+          <p ng-class="{'color-red': port.totalGainLoss < 0 , 'color-green': port.totalGainLoss > 0}">
+              Gain/Loss : <span ng-show="port.totalGainLoss > 0">+</span>{{port.totalGainLoss | currency}} (<span ng-show="port.totalGainLoss > 0">+</span>{{port.totalGainLossPercent | number:2}}%)
+          </p>
+          <p>
+              <a href="/#/portfolios/{{port._id}}" class="btn btn-primary">Show Portfolio</a>
+              <button class="btn btn-danger" ng-click="removePortfolio(port._id)">Remove</button>
+          </p>
+          <hr id="portfolios-view">
         </div>
     </div>
+    
 </div>
