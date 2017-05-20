@@ -23,7 +23,7 @@ function fetchDividendData (stock, callback) {
         
         // Yahoo API URL (for dividends data), CSV format
         var url = "http://real-chart.finance.yahoo.com/table.csv?s=" + stock.symbol + dateRange +"&g=v&ignore=.csv";
-        
+        // console.log(url);
         var request = http.get(url, function (res) {
             res.on('data', function (chunk) {
                 csvData += chunk;

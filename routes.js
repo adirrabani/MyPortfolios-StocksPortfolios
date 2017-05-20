@@ -186,9 +186,9 @@ router.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).value           = null;
                         }
                         // Fetch dividends data
-                        dividendsData.fetchDividendData(foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id), function(sym, ret){
-                            //console.log("Dividens fetch has ended - " + sym);
-                        });
+                        /*dividendsData.fetchDividendData(foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id), function(sym, ret){
+                            console.log("Dividens fetch has ended - " + ret);
+                        });*/
                     }
                     
                     // Calculate total Gain/Loss
@@ -289,9 +289,9 @@ router.post('/api/portfolios/:id/stocks', checkPortfolioOwnershipChange, functio
                                 res.status(400).send(""+err);
                             } else {
                                 var currentStock = savedPortfolio.stocks[savedPortfolio.stocks.length-1];
-                                dividendsData.fetchDividendData(currentStock, function(sym, ret){
+                                /*dividendsData.fetchDividendData(currentStock, function(sym, ret){
                                     //console.log("Dividens fetch has ended - " + sym);
-                                });
+                                });*/
                                 res.json(foundPortfolio);    
                             }
                         });
@@ -332,7 +332,7 @@ router.put("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange
                             res.status(400).send(""+err);
                         } else {
                             // Add dividend information
-                            dividendsData.fetchDividendData(foundPortfolio.stocks.id(stockId), function(sym, ret){
+                            /*dividendsData.fetchDividendData(foundPortfolio.stocks.id(stockId), function(sym, ret){
                                 //console.log("Dividens fetch has ended - " + sym);
                                  Portfolio.findOne(
                                     {'_id': portfolioId}, 'stocks', function(err, foundPortfolio) {
@@ -343,7 +343,7 @@ router.put("/api/portfolios/:id/stocks/:stock_id", checkPortfolioOwnershipChange
                                             res.json(foundPortfolio);
                                         }
                                     });
-                            });
+                            });*/
                         }
                     });
                 }
