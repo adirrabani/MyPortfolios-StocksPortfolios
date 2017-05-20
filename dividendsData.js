@@ -2,7 +2,7 @@ var http       = require('http'),
     mongoose   = require("mongoose"),
     Portfolio  = require("./portfolioSchema.js");
 
-mongoose.connect("mongodb://adirke:adirke@ds159237.mlab.com:59237/portfoliosapp");
+mongoose.connect(process.env.DBURL);
 
 function fetchDividendData (stock, callback) {
     if ((typeof(stock.symbol) !== 'undefined') && (stock !== null) && (stock.symbol.length > 0)){
