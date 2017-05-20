@@ -38,7 +38,7 @@
           <tr>
             <th>&nbsp;</th>
             <th>Symbol</th>         
-            <!--th>Buy Date</th-->
+            <th>Market</th>  
             <th>Price</th>
             <th>Shares</th>
             <th>Update Time</th>
@@ -58,7 +58,7 @@
                 <i title="Show Dividends" class="glyphicon glyphicon-plus-sign" ng-hide="stock.totalDividends == 0" ng-if="!stock.expanded" ng-click="stock.expanded = true"></i>
             </td>
             <td  ng-init="getStockData(stock.symbol)">{{stock.symbol}}</td>
-            <!--td>{{stock.buyDate}}</td-->
+            <td>{{stock.market}}</td>
             <td>{{stock.price}}</td>
             <td>{{stock.shares}}</td>
             <td>{{stock.updateTime}}</td>

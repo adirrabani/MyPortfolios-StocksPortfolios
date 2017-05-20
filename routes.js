@@ -96,7 +96,10 @@ router.post('/api/portfolios', isLoggedIn, function(req, res){
     
     Portfolio.create(newPortfolio, function(err, newPortfolio){
         if(err){
-            console.log("Error while creating new portfolio : " + err);
+            if(!req.body.name){
+                res.status(400).send(", Portfolio name cannot be empty");
+            }
+            res.status(400);
         } else {
             res.json(newPortfolio);
         }
@@ -168,6 +171,7 @@ router.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res
 
                         // Prepare stock object
                         if (currentStock) {
+                            foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).market          = currentStock.e;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).lastPrice       = currentStock.l;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).change          = currentStock.c;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).changePercent   = currentStock.cp;
@@ -177,6 +181,7 @@ router.get("/api/portfolios/:id", checkPortfolioOwnershipShow, function(req, res
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).value           = currentStock.l * foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).shares;
                             foundPortfolio.totalValue += (currentStock.l * foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).shares);
                         } else { // if stock data was not retrieved - enter null to the vars
+                            foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).market          = null;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).lastPrice       = null;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).change          = null;
                             foundPortfolio.stocks.id(foundPortfolio.stocks[i]._id).changePercent   = null;

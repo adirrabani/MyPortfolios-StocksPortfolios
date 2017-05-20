@@ -10,9 +10,9 @@ var Dividends = new mongoose.Schema({
 // Stocks schema setup
 var Stocks = new mongoose.Schema({
    symbol          : {type: String, required: true},
+   market          : {type: String, required: true},
    buyDate         : {type: Date, default: null},
    price           : {type: Number, min: 0},
-   //shares        : {type: Number, validate : [function(shares) { return shares > 0; }, "Number of shares has to be a positive number"]},
    shares          : {type: Number, min: 0},
    lastPrice       : {type: Number, default: null},
    change          : {type: Number, default: null},
@@ -27,7 +27,7 @@ var Stocks = new mongoose.Schema({
 
 // Portfolio schema setup
 var portfolioSchema = new mongoose.Schema({
-   name                 : String,
+   name                 : {type: String, required: true},
    owner                : String,
    totalBuy             : {type: Number, default: 0},
    totalValue           : {type: Number, default: 0},

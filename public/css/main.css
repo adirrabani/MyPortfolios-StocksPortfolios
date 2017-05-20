@@ -16,7 +16,6 @@ ul {
 
 td,th {
     text-align: center;
-    
 }
 
 td ul {
@@ -109,3 +108,9 @@ hr {
     display: inline-block;
 }
 
+#emptyportfolio {
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

@@ -18,7 +18,11 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
             //console.dir(response.data);
             $scope.isLoggedIn();
             $scope.portfolios = response.data;
+            console.dir(response.data);
             $scope.portfolio = "";
+            if(response.data.length == 0){
+                $scope.noPortfolios = true;
+            }
         };
         var errorCallback = function(err) {
             ngToast.create({
@@ -45,6 +49,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
             $location.url("/portfolios/" + res._id);
         };
         var errorCallback = function(err) {
+            console.log(err);
             if(err.status == 401){
                 $scope.closeModal();
                 ngToast.create({
