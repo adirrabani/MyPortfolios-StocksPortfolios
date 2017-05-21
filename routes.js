@@ -46,7 +46,6 @@ router.get('/isLoggedIn', function(req, res){
     res.send(req.isAuthenticated() ? req.user : '0');
 });
 
-
 // Show all portfolios for the relevant user (main page)
 router.get('/api/portfolios', function(req, res){
     // Checks if user is logged in and collect total value data for all portfolios

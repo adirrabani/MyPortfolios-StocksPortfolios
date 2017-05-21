@@ -114,3 +114,11 @@ hr {
     flex-direction: column;
     justify-content: center;
 }
+
+#about, #help {
+    color:grey;
+}
+
+#about a{
+    width:130px ;
+}

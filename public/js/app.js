@@ -7,6 +7,14 @@ portfoliosApp.config(function($routeProvider) {
             templateUrl:'views/portfolios/portfolios.html',
             controller: 'PortfoliosCtrl'
         })
+        .when('/about',{
+           templateUrl:'views/general/about.html',
+           controller: 'PortfoliosCtrl'
+        })
+        .when('/help',{
+           templateUrl:'views/general/help.html',
+           controller: 'PortfoliosCtrl'
+        })
         .when('/login',{
             templateUrl:'views/authentication/login.html',
             controller: 'AuthenticationCtrl'

@@ -10,10 +10,10 @@ var Dividends = new mongoose.Schema({
 // Stocks schema setup
 var Stocks = new mongoose.Schema({
    symbol          : {type: String, required: true},
-   market          : {type: String, required: true},
    buyDate         : {type: Date, default: null},
    price           : {type: Number, min: 0},
    shares          : {type: Number, min: 0},
+   market          : {type: String, default: null},
    lastPrice       : {type: Number, default: null},
    change          : {type: Number, default: null},
    changePercent   : {type: Number, default: null},
