@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
 
-
 // Dividends schema setup
 var Dividends = new mongoose.Schema({
    dividendDate : {type: Date},
@@ -36,6 +35,6 @@ var portfolioSchema = new mongoose.Schema({
    stocks               : [Stocks]
 });
 
-// Compile it into a module and export
+// Export model
 var Portfolio = mongoose.model("Portfolio",portfolioSchema);
 module.exports = Portfolio;

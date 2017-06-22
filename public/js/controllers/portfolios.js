@@ -3,6 +3,8 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     // Check if user is logged in
      $scope.isLoggedIn = function(){
         var successCallback = function(response) {
+            console.log("LOGGED");
+            console.log(response.data);
             $rootScope.currentUser =  response.data.username;
         };
         var errorCallback = function(err) {

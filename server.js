@@ -2,22 +2,28 @@ var express    = require("express"),
     app        = express(),
     bodyParser = require("body-parser"),
     mongoose   = require("mongoose"),
-    Portfolio  = require("./portfolioSchema.js"),
-    User = require("./userSchema.js"),
-    request    = require('request'),
-    async = require("async"),
-    dividendsData  = require("./dividendsData.js"),
+
+    User = require("./server/models/userSchema.js"),
+    //dividendsData  = require("./dividendsData.js"),
     passport = require("passport"),
     LocalStrategy = require("passport-local").Strategy,
     cookieParser = require('cookie-parser');
     
-var routes   = require("./routes.js");
+//var routes   = require("./routes.js");
+var authRoutes = require("./server/routes/authRoutes.js");
+var portfoliosRoutes = require("./server/routes/portfoliosRoutes.js");
+
+// Use routes file ("./routes.js")
+//app.use(authRoutes);
   
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', __dirname + '/public/views');
 app.use(express.static(__dirname + '/public'));
 console.log(process.env.DBURL);
-mongoose.createConnection(process.env.DBURL);
+
+// mongoose.createConnection(process.env.DBURL);
+mongoose.connect(process.env.DBURL);
+var db = mongoose.connection;
 
 // Passport Configuration
 app.use(cookieParser());
@@ -34,7 +40,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Use routes file ("./routes.js")
-app.use(routes);
+app.use(portfoliosRoutes);
+app.use(authRoutes);
 
 // Start the application
 app.listen(process.env.PORT, process.env.IP, function(){

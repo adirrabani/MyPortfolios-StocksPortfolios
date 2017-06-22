@@ -9,6 +9,6 @@ var UserSchema = new mongoose.Schema({
 
 UserSchema.plugin(passportLocalMongoose);
 
-// Compile all into a module and export
+// Export model
 var User = mongoose.model("User",UserSchema);
 module.exports = User;

@@ -1,44 +1,10 @@
 var express = require("express"); 
 var router  = express.Router(); 
 
-
-var bodyParser = require("body-parser"),
-    passport = require("passport"),
-    Portfolio  = require("./portfolioSchema.js"),
-    User = require("./userSchema.js"),
+var Portfolio  = require("../models/portfolioSchema.js"),
     request    = require('request'),
-    async = require("async"),
-    dividendsData  = require("./dividendsData.js");
-
-// Registration route (Using passport local strategy)
-router.post("/register", function(req, res){
-    var newUser = new User({username: req.body.username});
-    //console.log(req.body);
-    User.register(newUser, req.body.password, function(err, user){
-        if(err){
-            console.log("Error in registration - " + err.message);
-            res.status(400).json(err.message);
-        } else {
-            //console.log(user);
-            passport.authenticate("local")(req, res, function(){
-                res.status(200).json(user);
-            });    
-        }
-        
-    });
-});
-
-// Login route
-router.post("/login", passport.authenticate("local"), function(req, res){
-    //console.log(req.user);
-    res.json(req.user);
-});
-
-// Logout route
-router.post("/logout", function(req, res){
-    req.logout();
-    res.sendStatus(200);
-});
+    async = require("async");
+    //dividendsData  = require("./dividendsData.js");
 
 // Check if user logged in route
 router.get('/isLoggedIn', function(req, res){
@@ -82,8 +48,10 @@ router.get('/api/portfolios', function(req, res){
     } else {
         // If user is not logged in shows example portfolio
         Portfolio.find({'name': 'example'}, function(err, examplePortfolio){
+            if(err) {
+                //res.status(400).send("Cannot find portfolios - " + err);
+            }
                 res.status(200).json(examplePortfolio);
-            
         });
     }
     
