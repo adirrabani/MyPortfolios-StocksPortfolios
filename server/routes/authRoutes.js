@@ -1,40 +1,18 @@
 var express = require("express"),
     router  = express.Router(); 
 
-var passport = require("passport"),
-    User = require("../models/userSchema.js");
+var passport = require("passport");
 
+var authController = require("../controllers/auth.js");
 
-// Registration route (Using passport local strategy)
-router.post("/register", function(req, res){
-    var newUser = new User({username: req.body.username});
-    //console.log(req.body);
-    User.register(newUser, req.body.password, function(err, user){
-        if(err){
-            console.log("Error in registration - " + err.message);
-            res.status(400).json(err.message);
-        } else {
-            //console.log(user);
-            passport.authenticate("local")(req, res, function(){
-                res.status(200).json(user);
-            });    
-        }
-        
-    });
-});
+/* POST request for user registration */
+router.post("/register", authController.user_registration_post);
 
-
-// Login route
-router.post("/login", passport.authenticate("local"), function(req, res){
-    //console.log(req.user);
-    res.json(req.user);
-});
+/* Post request for user login */
+router.post("/login", passport.authenticate("local"), authController.user_login_post);
 
 // Logout route
-router.post("/logout", function(req, res){
-    req.logout();
-    res.sendStatus(200);
-});
+router.post("/logout", authController.user_logout_post);
 
 /*
 // Check if user logged in route
