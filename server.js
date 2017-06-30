@@ -19,6 +19,8 @@ var portfoliosRoutes = require("./server/routes/portfoliosRoutes.js");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('views', __dirname + '/public/views');
 app.use(express.static(__dirname + '/public'));
+//app.use(express.static('public'));
+
 console.log(process.env.DBURL);
 
 // mongoose.createConnection(process.env.DBURL);

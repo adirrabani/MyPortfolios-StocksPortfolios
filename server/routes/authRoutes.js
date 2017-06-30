@@ -8,10 +8,10 @@ var authController = require("../controllers/auth.js");
 /* POST request for user registration */
 router.post("/register", authController.user_registration_post);
 
-/* Post request for user login */
+/* POST request for user login */
 router.post("/login", passport.authenticate("local"), authController.user_login_post);
 
-// Logout route
+/* POST request for user logout */
 router.post("/logout", authController.user_logout_post);
 
 /*
