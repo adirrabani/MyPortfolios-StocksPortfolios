@@ -3,8 +3,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
     // Check if user is logged in
      $scope.isLoggedIn = function(){
         var successCallback = function(response) {
-            console.log("LOGGED");
-            console.log(response.data);
+            //console.log(response.data);
             $rootScope.currentUser =  response.data.username;
         };
         var errorCallback = function(err) {
@@ -20,7 +19,7 @@ portfoliosApp.controller('PortfoliosCtrl', ['$scope', '$rootScope', '$http', '$l
             //console.dir(response.data);
             $scope.isLoggedIn();
             $scope.portfolios = response.data;
-            console.dir(response.data);
+            //console.dir(response.data);
             $scope.portfolio = "";
             if(response.data.length == 0){
                 $scope.noPortfolios = true;

@@ -47,12 +47,11 @@ portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http',
     // Check if user is logged in
      $scope.isLoggedIn = function(){
         var successCallback = function(response) {
-            console.log("LOGGED");
-            console.log(response.data);
+            //console.log(response.data);
             $rootScope.currentUser =  response.data.username;
         };
         var errorCallback = function(err) {
-            console.dir(err);
+            //console.dir(err);
         };        
         $http.get('/isLoggedIn').then(successCallback,errorCallback);
     };
@@ -69,7 +68,7 @@ portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http',
         
         var errorCallback = function(err) {
             console.log("There was a problem with logout - ");
-            console.dir(err);
+            //console.dir(err);
         };        
 
         $scope.error = null;
@@ -93,7 +92,7 @@ portfoliosApp.controller('AuthenticationCtrl', ['$scope', '$rootScope', '$http',
             $location.url("/portfolios");
         };
         var errorCallback = function(err) {
-            console.dir(err);
+            //console.dir(err);
             ngToast.create({
                 className: 'danger',
                 content: ''+err.data,
